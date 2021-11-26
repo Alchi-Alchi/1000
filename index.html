@@ -10,10 +10,47 @@
 </head>
 <body>
   <div class="header"><span id="logo">1000</span></div>
-  <div class="rules">
-    <h2 id="head">Правила</h2>
-    <p id="rules">Цель игры - набрать 1000 очков. Каждый ход начинается с броска сразу 5 кубиков. После того, как кубики упали, бросок анализируется на наличие выпавших комбинаций. Очки приносят кубики достоинством 1 (10 очков) и 5 (5 очков), а также 3 и более кубика одного достоинства, выпавшие в текущем броске. При этом 3 кубика дают очки по номиналу кубика умноженного на 10 четыре на 20, пять на 1000. Комбинация выпавших кубиков 1, 2, 3, 4, 5, - это 125 очков, а 2, 3, 4, 5, 6 – 250 очков. Если бросок принес игроку хотя бы 5 очков (т.е. выпала ненулевая комбинация), то все кубики, которые принесли очки откладываются, а оставшиеся кубики игрок бросает повторно. При этом очки за новые выпавшие комбинации суммируются с ранее набранными.</p>
+  <div id="wrapper">
+    
   </div>
-  <div class="btn"><button id="btn">К игре</button></div>
+  
+  <script>
+    window.onhashchange = SwitchToStateFromURLHash;
+    let SPAStateH = {};
+    let wrapper = document.getElementById ('wrapper');
+    function SwitchToStateFromURLHash() {
+      let URLHash = window.location.hash;
+      let StateJSON = decodeURIComponent(URLHash.substr(1));
+      if (StateJSON !== "") {
+        SPAStateH = JSON.parse(StateJSON);
+      } else {
+        SPAStateH = {pagename: 'Main'};
+      }
+      let PageHTML = "";
+      switch (SPAStateH.pagename) {
+        case 'Main':
+        PageHTML += "<div class='rules'><h2 id='head'>Правила</h2><p id='rules'>Цель игры - набрать 1000 очков. Каждый ход начинается с броска сразу 5 кубиков. После того, как кубики упали, бросок анализируется на наличие выпавших комбинаций. Очки приносят кубики достоинством 1 (10 очков) и 5 (5 очков), а также 3 и более кубика одного достоинства, выпавшие в текущем броске. При этом 3 кубика дают очки по номиналу кубика умноженного на 10 четыре на 20, пять на 1000. Комбинация выпавших кубиков 1, 2, 3, 4, 5, - это 125 очков, а 2, 3, 4, 5, 6 – 250 очков. Если бросок принес игроку хотя бы 5 очков (т.е. выпала ненулевая комбинация), то все кубики, которые принесли очки откладываются, а оставшиеся кубики игрок бросает повторно. При этом очки за новые выпавшие комбинации суммируются с ранее набранными.</p></div>"
+          break;
+        case 'Game':
+          PageHTML += "<div><p id='game'>Игра</p></div>";
+          break;
+      }
+      document.getElementById('wrapper').innerHTML = PageHTML;
+    }
+    function SwitchToState(NewStateH) {
+      location.hash = encodeURIComponent(JSON.stringify(NewStateH));
+    }
+    function SwitchToGamePage() {
+      SwitchToState({pagename: 'Game'});
+    }
+    function SwitchToMainPage() {
+      SwitchToState({pagename: 'Main'});
+    }
+    SwitchToStateFromURLHash();
+  </script>
+  <div class='btn'>
+    <button id='btn' onclick='SwitchToGamePage()'>К игре</button>
+    <button id='btn' onclick='SwitchToMainPage()'>На главную</button>
+  </div>
 </body> 
 </html>
